@@ -3,7 +3,7 @@ import { User } from '../models/User.js'
 
 const router = Router()
 
-router.post('/register', async (req, res) => {
+router.post('/signup', async (req, res) => {
     try {
         await User(req.body).save()
         res.status(201).send({ message: "User created successfully!" })
