@@ -13,11 +13,23 @@ export const useTask = () => {
         const data = await response.json()
         setTasks(data)
     }
-    const addTask = async () => {
-        alert("Dodaj zadanie")
+    const addTask = async (task) => {
+        const response = await fetch("http://localhost:3000/api/tasks", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(task)
+        })
+        if (response.status === 401) {
+            return navigate("/login")
+        }
+        const data = await response.json()
+        setTasks([...tasks, data])
     }
-    const editTask = async (taskId) => {
-        alert(`Edytuj zadanie ${taskId}`)
+    const editTask = async (task) => {
+        alert(JSON.stringify(task))
     }
     const deleteTask = async (taskId) => {
         alert(`Usuń zadanie ${taskId}`)
