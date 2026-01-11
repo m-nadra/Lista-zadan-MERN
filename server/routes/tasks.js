@@ -36,7 +36,16 @@ router.post('/tasks', async (req, res) => {
             user: req.id
         })
         await task.save()
-        res.status(201).json({ message: "Task added successfully!" })
+        res.status(201).json(task)
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+router.delete("/tasks/:id", async (req, res) => {
+    try {
+        await Task.findByIdAndDelete(req.params.id)
+        res.status(204).end()
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -25,14 +25,18 @@ export const useTask = () => {
         if (response.status === 401) {
             return navigate("/login")
         }
-        const data = await response.json()
-        setTasks([...tasks, data])
     }
     const editTask = async (task) => {
         alert(JSON.stringify(task))
     }
     const deleteTask = async (taskId) => {
-        alert(`Usuń zadanie ${taskId}`)
+        const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+        if (response.status === 401) {
+            return navigate("/login")
+        }
     }
     return { tasks, getTasks, addTask, editTask, deleteTask }
 }
