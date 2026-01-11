@@ -1,28 +1,13 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router"
+import { useEffect } from "react"
 import { useAuth } from "../hooks/useAuth"
+import { useTask } from "../hooks/useTask"
 
 export default function Main() {
-    const navigate = useNavigate()
-    const [tasks, setTasks] = useState()
     const { handleLogout } = useAuth()
+    const { tasks, getTasks, addTask, editTask, deleteTask} = useTask()
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:3000/api/tasks", {
-                method: "GET",
-                credentials: "include"
-            })
-            if (response.status === 401) {
-                return navigate("/login")
-            }
-            const data = await response.json()
-            setTasks(data)
-        }
-        fetchData()
-            .catch(() => {
-                return navigate("/login")
-            })
-    }, [navigate])
+        getTasks()
+    }, [getTasks])
 
     return <div>
         <h1>Lista zadań</h1>
@@ -36,17 +21,17 @@ export default function Main() {
             </thead>
             <tbody>
                 {tasks && tasks.map(task => (
-                    <tr key={task.id}>
+                    <tr key={task._id}>
                         <td>{task.name}</td>
                         <td>{task.description}</td>
                         <td>{task.date}</td>
-                        <td><button>Edytuj</button></td>
-                        <td><button>Usuń</button></td>
+                        <td><button onClick={() => editTask(task._id)}>Edytuj</button></td>
+                        <td><button onClick={() => deleteTask(task._id)}>Usuń</button></td>
                     </tr>
                 ))}
             </tbody>
         </table>
-        <button>Dodaj zadanie</button>
+        <button onClick={addTask}>Dodaj zadanie</button>
         <button onClick={handleLogout}>Wyloguj</button>
     </div>
 }
