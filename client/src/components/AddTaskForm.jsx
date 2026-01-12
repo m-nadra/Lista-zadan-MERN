@@ -1,12 +1,11 @@
 import { useState } from "react"
-import { useTask } from "../hooks/useTask"
 
-export default function AddTaskForm({ onClose }) {
-    const { addTask } = useTask()
-    const [name, setName] = useState()
-    const [description, setDescription] = useState()
-    const [date, setDate] = useState()
-    const handleSubmit = async () => {
+export default function AddTaskForm({ onClose, addTask }) {
+    const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
+    const [date, setDate] = useState("")
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         await addTask({
             name: name,
             description: description,

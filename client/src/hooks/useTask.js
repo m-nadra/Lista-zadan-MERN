@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 
 export const useTask = () => {
-    const [tasks, setTasks] = useState()
+    const [tasks, setTasks] = useState([])
     const navigate = useNavigate()
     const getTasks = async () => {
         const response = await fetch("http://localhost:3000/api/tasks", {
@@ -24,7 +24,12 @@ export const useTask = () => {
             },
             body: JSON.stringify(task)
         })
-        if (response.status === 401) {
+        if (response.ok) {
+            const newTask = await response.json()
+            console.log(tasks)
+            setTasks([...tasks, newTask])
+
+        } else if (response.status === 401) {
             navigate("/login")
         }
     }
@@ -36,7 +41,9 @@ export const useTask = () => {
             method: "DELETE",
             credentials: "include",
         })
-        if (response.status === 401) {
+        if (response.ok)
+            setTasks(prev => prev.filter(t => t._id !== taskId))
+        else if (response.status === 401) {
             navigate("/login")
         }
     }

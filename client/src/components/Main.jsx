@@ -5,7 +5,7 @@ import AddTaskForm from "./AddTaskForm"
 
 export default function Main() {
     const { handleLogout } = useAuth()
-    const { tasks, getTasks, deleteTask } = useTask()
+    const { tasks, getTasks, deleteTask, addTask } = useTask()
     const [showForm, setShowForm] = useState(false)
     useEffect(() => {
         getTasks()
@@ -22,21 +22,21 @@ export default function Main() {
                     </tr>
                 </thead>
                 <tbody>
-                    {tasks && tasks.map(task => (
+                    {tasks?.map(task => (
                         <tr key={task._id}>
                             <td>{task.name}</td>
                             <td>{task.description}</td>
                             <td>{task.date}</td>
-                            <td><button onClick={() => {}}>Edytuj</button></td>
+                            <td><button onClick={() => { }}>Edytuj</button></td>
                             <td><button onClick={() => deleteTask(task._id)}>Usuń</button></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <button onClick={() => {setShowForm(true)}}>Dodaj zadanie</button>
+            <button onClick={() => { setShowForm(true) }}>Dodaj zadanie</button>
             <button onClick={handleLogout}>Wyloguj</button>
             <Activity mode={showForm ? "visible" : "hidden"}>
-                <AddTaskForm onClose={setShowForm} />
+                <AddTaskForm onClose={setShowForm} addTask={addTask}/>
             </Activity>
         </div>
     )
