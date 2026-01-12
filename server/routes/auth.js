@@ -6,8 +6,13 @@ const router = Router()
 
 router.post('/signup', async (req, res) => {
     try {
-        await User(req.body).save()
-        res.status(201).send({ message: "User created successfully" })
+        const user = await User(req.body).save()
+        const token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, { expiresIn: 60 * 15 })
+        res.cookie("access_token", token, {
+            maxAge: 1000 * 60 * 15,
+            httpOnly: true
+        })
+        res.status(201).json({ message: "User created successfully" })
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

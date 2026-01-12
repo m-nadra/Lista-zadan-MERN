@@ -2,8 +2,35 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 
 export const useAuth = () => {
-    const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState("")
+    const navigate = useNavigate()
+    const handleSignup = async (username, password, password2) => {
+        if (password !== password2) {
+            setErrorMessage("Hasła nie są takie same")
+            return
+        }
+        try {
+            const response = await fetch("http://localhost:3000/signup", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            if (!response.ok) {
+                setErrorMessage("Nazwa użytkownika jest zajęta");
+            } else {
+                navigate("/")
+            }
+        } catch (err) {
+            setErrorMessage(err)
+        }
+
+    }
     const handleLogin = async (username, password) => {
         try {
             const response = await fetch("http://localhost:3000/login", {
@@ -32,7 +59,7 @@ export const useAuth = () => {
             credentials: "include"
         })
         if (response.ok)
-            return navigate("/login")
+            navigate("/login")
     }
-    return { handleLogin, errorMessage, handleLogout }
+    return { handleLogin, errorMessage, handleLogout, handleSignup }
 }
