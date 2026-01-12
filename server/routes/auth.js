@@ -1,12 +1,17 @@
 import { Router } from 'express'
 import { User } from '../models/User.js'
 import jwt from 'jsonwebtoken'
+import { hash, verify } from 'argon2'
 
 const router = Router()
 
 router.post('/signup', async (req, res) => {
     try {
-        const user = await User(req.body).save()
+        const hashedPassword = await hash(req.body.password)
+        const user = await User({
+            username: req.body.username,
+            password: hashedPassword
+        }).save()
         const token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, { expiresIn: 60 * 15 })
         res.cookie("access_token", token, {
             maxAge: 1000 * 60 * 15,
@@ -21,7 +26,7 @@ router.post('/signup', async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username })
-        if (user.password === req.body.password) {
+        if (await verify(user.password, req.body.password)) {
             const token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, { expiresIn: 60 * 15 })
             res.cookie("access_token", token, {
                 maxAge: 1000 * 60 * 15,
