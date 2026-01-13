@@ -7,16 +7,22 @@ export default function Login() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const { handleLogin, errorMessage } = useAuth()
-    return <div>
-        <form action={() => handleLogin(username, password)} method="POST">
-            <h1>Zaloguj się</h1>
-            <p>{errorMessage}</p>
-            <label htmlFor="username">Nazwa użytkownika</label>
-            <input type="text" id="username" value={username} onChange={e => setUsername(e.target.value)} required />
-            <label htmlFor="password">Hasło</label>
-            <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} required />
-            <input type="submit" value="Zaloguj się" />
-            <Link id="link" to="/signup">Załóż konto</Link>
-        </form>
-    </div>
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        handleLogin(username, password)
+    }
+    return (
+        <div>
+            <form onSubmit={handleSubmit}>
+                <h1>Zaloguj się</h1>
+                <p>{errorMessage}</p>
+                <label htmlFor="username">Nazwa użytkownika</label>
+                <input type="text" id="username" value={username} onChange={e => setUsername(e.target.value)} required />
+                <label htmlFor="password">Hasło</label>
+                <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                <input type="submit" value="Zaloguj się" />
+                <Link id="link" to="/signup">Załóż konto</Link>
+            </form>
+        </div>
+    )
 }
