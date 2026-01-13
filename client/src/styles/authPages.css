@@ -1,0 +1,86 @@
+div {
+  background-color: var(--bg-dark);
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  background-color: var(--bg-light);
+  display: flex;
+  flex-direction: column;
+  min-width: 50%;
+  height: 80%;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10%;
+  color: var(--text);
+  gap: 2%;
+}
+
+p {
+  color: var(--danger);
+  font-size: large;
+}
+
+h1 {
+  font-size: xx-large;
+}
+
+#link {
+  text-decoration: none;
+  color: var(--text);
+}
+
+#link:hover {
+  color: var(--text-muted);
+}
+
+input[type=submit] {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+input[type=submit]:hover {
+  background-color: var(--secondary);
+  color: var(--bg);
+}
+
+input {
+  box-sizing: border-box;
+  width: 80%;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 44px;
+  background-color: var(--bg);
+  border-radius: .5rem;
+  padding: 0 1rem;
+  border: 2px solid transparent;
+  font-size: 1rem;
+  transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
+}
+
+label {
+  display: block;
+  margin: 0.5rem auto 0.3rem auto;
+  width: 80%;
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+}
+
+input:hover,
+input:focus,
+input-group:hover input {
+  outline: none;
+  border-color: var(--border);
+}
+
+input-group:hover label,
+input:focus {
+  color: var(--text);
+}
