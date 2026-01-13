@@ -42,6 +42,19 @@ router.post('/tasks', async (req, res) => {
     }
 })
 
+router.put("/tasks/:id", async (req, res) => {
+    try {
+        const updatedTask = await Task.findByIdAndUpdate(req.params.id, {
+            name: req.body.name,
+            description: req.body.description,
+            date: req.body.date
+        })
+        res.status(200).json(updatedTask)
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
 router.delete("/tasks/:id", async (req, res) => {
     try {
         await Task.findByIdAndDelete(req.params.id)
