@@ -1,12 +1,12 @@
 import { Activity, useEffect, useState } from "react"
 import { useAuth } from "../hooks/useAuth"
-import { useTask } from "../hooks/useTask"
 import AddTaskForm from "./AddTaskForm"
-import Task from "./Task"
+import { useTaskContext } from "../contexts/TaskContext"
+import TaskTable from "./TaskTable"
 
 export default function Main() {
     const { handleLogout } = useAuth()
-    const { tasks, getTasks, deleteTask, addTask, editTask } = useTask()
+    const { getTasks } = useTaskContext()
     const [showForm, setShowForm] = useState(false)
     useEffect(() => {
         getTasks()
@@ -14,22 +14,11 @@ export default function Main() {
     return (
         <div>
             <h1>Lista zadań</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nazwa</th>
-                        <th>Opis</th>
-                        <th>Data wykonania</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tasks?.map(task => ( <Task task={task} deleteTask={deleteTask} editTask={editTask} />))}
-                </tbody>
-            </table>
+            <TaskTable />
             <button onClick={() => { setShowForm(true) }}>Dodaj zadanie</button>
             <button onClick={handleLogout}>Wyloguj</button>
             <Activity mode={showForm ? "visible" : "hidden"}>
-                <AddTaskForm onClose={setShowForm} addTask={addTask} />
+                <AddTaskForm onClose={setShowForm} />
             </Activity>
         </div>
     )

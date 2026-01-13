@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { useTaskContext } from "../contexts/TaskContext"
 
-export default function AddTaskForm({ onClose, addTask }) {
+export default function AddTaskForm({ onClose }) {
+    const { addTask } = useTaskContext()
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [date, setDate] = useState("")
