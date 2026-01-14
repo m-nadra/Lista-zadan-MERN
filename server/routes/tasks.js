@@ -30,11 +30,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const value = await taskSchema.validateAsync(req.body)
-        const task = new Task({
+        const task = await Task.create({
             ...value,
             user: req.userId
         })
-        await task.save()
         res.status(201).json(task)
     } catch (err) {
         if (err.isJoi)
