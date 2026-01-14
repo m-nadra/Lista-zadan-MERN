@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useTaskContext } from "../contexts/TaskContext"
+import styles from "../styles/task.module.css"
 
 export default function AddTaskForm({ onClose }) {
     const { addTask } = useTaskContext()
@@ -16,18 +17,15 @@ export default function AddTaskForm({ onClose }) {
         onClose(false)
     }
     return (
-        <div>
+        <form onSubmit={handleSubmit} className={styles.form}>
             <h1>Dodaj nowe zadanie</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Nazwa zadania</label>
-                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-                <label htmlFor="description">Opis</label>
-                <input type="text" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <label htmlFor="date">Data</label>
-                <input type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
-                <input type="submit" value="Wyślij" />
-            </form>
-            <button onClick={() => onClose(false)}>Zamknij formularz</button>
-        </div>
+            <label htmlFor="name">Nazwa zadania</label>
+            <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <label htmlFor="description">Opis</label>
+            <input type="text" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+            <label htmlFor="date">Data</label>
+            <input type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <input type="submit" value="Wyślij" />
+        </form>
     )
 }

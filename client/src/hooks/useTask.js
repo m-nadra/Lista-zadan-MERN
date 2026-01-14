@@ -5,15 +5,19 @@ export const useTask = () => {
     const [tasks, setTasks] = useState([])
     const navigate = useNavigate()
     const getTasks = async () => {
-        const response = await fetch("http://localhost:3000/api/tasks", {
-            method: "GET",
-            credentials: "include"
-        })
-        if (response.status === 401) {
+        try{
+            const response = await fetch("http://localhost:3000/api/tasks", {
+                method: "GET",
+                credentials: "include"
+            })
+            if (response.status === 401) {
+                navigate("/login")
+            }
+            const data = await response.json()
+            setTasks(data)
+        } catch (err){
             navigate("/login")
         }
-        const data = await response.json()
-        setTasks(data)
     }
     const addTask = async (task) => {
         const response = await fetch("http://localhost:3000/api/tasks", {

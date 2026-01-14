@@ -10,6 +10,7 @@ export default function TaskTable() {
                     <th>Nazwa</th>
                     <th>Opis</th>
                     <th>Data wykonania</th>
+                    <th>Akcje</th>
                 </tr>
             </thead>
             <tbody>

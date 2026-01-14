@@ -14,7 +14,77 @@
     --success: oklch(0.5 0.05 160);
     --info: oklch(0.5 0.05 260);
 }
+
 body {
     margin: 0;
     padding: 0;
+}
+
+input {
+    box-sizing: border-box;
+    width: 80%;
+    max-width: 100%;
+    margin: 0 auto;
+    height: 44px;
+    background-color: var(--bg);
+    border-radius: .5rem;
+    padding: 0 1rem;
+    border: 2px solid transparent;
+    font-size: 1rem;
+    transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
+}
+
+h1 {
+    font-size: xx-large;
+}
+
+input[type=submit] {
+    background-color: var(--primary);
+    color: var(--bg);
+}
+
+input[type=submit]:hover {
+    background-color: var(--secondary);
+    color: var(--bg);
+}
+
+label {
+    display: block;
+    margin: 0.5rem auto 0.3rem auto;
+    width: 80%;
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-muted);
+    transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+}
+
+input:hover,
+input:focus,
+input-group:hover input {
+    outline: none;
+    border-color: var(--border);
+}
+
+input-group:hover label,
+input:focus {
+    color: var(--text);
+}
+
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0.6rem 0.9rem;
+    font-size: 1rem;
+    line-height: 1;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--primary);
+    color: var(--bg-light);
+    cursor: pointer;
+    transition: background 0.12s ease, transform 0.06s ease;
+}
+
+button:hover {
+    background: var(--secondary);
 }

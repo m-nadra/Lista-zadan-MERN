@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router"
 import { useAuth } from "../hooks/useAuth";
-import '../styles/authPages.css'
+import styles from '../styles/authPages.module.css'
 
 export default function Signup() {
     const [username, setUsername] = useState("")
@@ -13,10 +13,10 @@ export default function Signup() {
         handleSignup(username, password, password2)
     }
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <main className={styles.main}>
+            <form onSubmit={handleSubmit} className={styles.form}>
                 <h1>Zarejestruj się</h1>
-                <p>{errorMessage}</p>
+                <p className={styles.p}>{errorMessage}</p>
                 <label htmlFor="username">Nazwa użytkownika</label>
                 <input type="text" id="username" value={username} onChange={e => setUsername(e.target.value)} required />
                 <label htmlFor="password">Hasło</label>
@@ -24,8 +24,8 @@ export default function Signup() {
                 <label htmlFor="password">Powtórz hasło</label>
                 <input type="password" id="password2" value={password2} onChange={e => setPassword2(e.target.value)} required />
                 <input type="submit" value="Załóż konto" />
-                <Link id="link" to="/login">Posiadasz konto? Zaloguj się</Link>
+                <Link className={styles.link} to="/login">Posiadasz konto? Zaloguj się</Link>
             </form>
-        </div>
+        </main>
     )
 }
