@@ -10,6 +10,10 @@ export default function Task({ task }) {
     const [date, setDate] = useState(task.date)
 
     const handleEdit = async () => {
+        if (name === "") {
+            alert("Nazwa zadania musi zostać podana!")
+            return
+        }
         const editedTaskBody = {
             name: name,
             description: description,
