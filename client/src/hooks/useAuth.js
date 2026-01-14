@@ -5,10 +5,8 @@ export const useAuth = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const navigate = useNavigate()
     const handleSignup = async (username, password, password2) => {
-        if (password !== password2) {
-            setErrorMessage("Hasła nie są takie same")
-            return
-        }
+        if (password !== password2)
+            return setErrorMessage("Hasła nie są takie same")
         try {
             const response = await fetch("api/signup", {
                 method: "POST",
@@ -21,11 +19,11 @@ export const useAuth = () => {
                     password: password
                 })
             })
-            if (!response.ok) {
-                setErrorMessage("Nazwa użytkownika jest zajęta");
-            } else {
-                navigate("/")
-            }
+            if (response.status === 409)
+                return setErrorMessage("Nazwa użytkownika jest zajęta");
+            if (response.status === 500)
+                return setErrorMessage("Wystąpił błąd po stronie serwera.")
+            navigate("/")
         } catch (err) {
             setErrorMessage(err)
         }
@@ -44,22 +42,24 @@ export const useAuth = () => {
                     password: password
                 })
             })
-            if (!response.ok) {
-                setErrorMessage("Invalid username or password!");
-            } else {
-                navigate("/")
-            }
+            if (response.status === 401)
+                return setErrorMessage("Nieprawidłowe hasło");
+            if (response.status === 404)
+                return setErrorMessage("Użytkownik nie istnieje")
+            if (response.status === 500)
+                return setErrorMessage("Wystąpił błąd po stronie serwera.")
+
+            navigate("/")
         } catch (err) {
             setErrorMessage(err)
         }
     }
     const handleLogout = async () => {
-        const response = await fetch("api/logout", {
+        await fetch("api/logout", {
             method: "POST",
             credentials: "include"
         })
-        if (response.ok)
-            navigate("/login")
+        navigate("/login")
     }
     return { handleLogin, errorMessage, handleLogout, handleSignup }
 }

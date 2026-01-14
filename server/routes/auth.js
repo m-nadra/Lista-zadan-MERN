@@ -19,6 +19,8 @@ router.post('/signup', async (req, res) => {
         })
         res.status(201).json({ message: "User created successfully" })
     } catch (err) {
+        if (err.code === 11000)
+            return res.status(409).json({ error: "User with this username already exists" })
         if (err.isJoi)
             return res.status(400).json(err.details)
         res.status(500).json({ error: err.message });
@@ -42,8 +44,6 @@ router.post("/login", async (req, res) => {
         })
         res.status(204).end()
     } catch (err) {
-        if (err.code === 11000)
-            return res.status(409).json({ error: "User with this username already exists" })
         if (err.isJoi)
             return res.status(400).json(err.details)
         res.status(500).json({ error: err.message });
