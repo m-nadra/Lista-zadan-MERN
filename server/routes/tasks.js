@@ -18,7 +18,7 @@ router.use(async (req, res, next) => {
     }
 })
 
-router.get('/tasks', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.id });
         res.status(200).json(tasks);
@@ -27,7 +27,7 @@ router.get('/tasks', async (req, res) => {
     }
 });
 
-router.post('/tasks', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const task = new Task({
             name: req.body.name,
@@ -42,7 +42,7 @@ router.post('/tasks', async (req, res) => {
     }
 })
 
-router.put("/tasks/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     try {
         const updatedTask = await Task.findByIdAndUpdate(req.params.id, {
             name: req.body.name,
@@ -55,7 +55,7 @@ router.put("/tasks/:id", async (req, res) => {
     }
 })
 
-router.delete("/tasks/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
         await Task.findByIdAndDelete(req.params.id)
         res.status(204).end()

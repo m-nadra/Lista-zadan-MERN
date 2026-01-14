@@ -6,7 +6,7 @@ export const useTask = () => {
     const navigate = useNavigate()
     const getTasks = async () => {
         try{
-            const response = await fetch("http://localhost:3000/api/tasks", {
+            const response = await fetch("api/tasks", {
                 method: "GET",
                 credentials: "include"
             })
@@ -20,7 +20,7 @@ export const useTask = () => {
         }
     }
     const addTask = async (task) => {
-        const response = await fetch("http://localhost:3000/api/tasks", {
+        const response = await fetch("api/tasks", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -37,7 +37,7 @@ export const useTask = () => {
         }
     }
     const editTask = async (taskId, task) => {
-        const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+        const response = await fetch(`api/tasks/${taskId}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -54,7 +54,7 @@ export const useTask = () => {
         }
     }
     const deleteTask = async (taskId) => {
-        const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+        const response = await fetch(`api/tasks/${taskId}`, {
             method: "DELETE",
             credentials: "include",
         })

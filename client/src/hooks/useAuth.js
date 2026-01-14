@@ -10,7 +10,7 @@ export const useAuth = () => {
             return
         }
         try {
-            const response = await fetch("http://localhost:3000/signup", {
+            const response = await fetch("api/signup", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -33,7 +33,7 @@ export const useAuth = () => {
     }
     const handleLogin = async (username, password) => {
         try {
-            const response = await fetch("http://localhost:3000/login", {
+            const response = await fetch("api/login", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -54,7 +54,7 @@ export const useAuth = () => {
         }
     }
     const handleLogout = async () => {
-        const response = await fetch("http://localhost:3000/logout", {
+        const response = await fetch("api/logout", {
             method: "POST",
             credentials: "include"
         })

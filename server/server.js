@@ -22,8 +22,8 @@ mongoose.connect(process.env.DATABASE_URL)
     .then(() => console.log("Connected to the database"))
     .catch(err => console.error(err))
 
-app.use('/api', tasks)
-app.use('/', auth)
+app.use('/api/tasks', tasks)
+app.use('/api', auth)
 
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`)
