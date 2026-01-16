@@ -13,3 +13,7 @@ services:
       CLIENT_URL: "http://client:80"
       DATABASE_URL: "mongodb://root:root@database:27017/lista_zadan?authSource=admin"
       JWTPRIVATEKEY: "Qhg4Ww6wv6rKaI7Sw/0by0mvNe5/eHKbs8jepDW5/r6Q8Ri+136pgmjUvzflRg72"
+  client:
+    build: ./client/
+    ports:
+      - "80:80"
