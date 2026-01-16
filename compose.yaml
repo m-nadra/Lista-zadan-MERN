@@ -1,0 +1,15 @@
+services:
+  database:
+    image: mongo:noble@sha256:e30bf5231ff01512e7db91feda37b7ef4fd499867b89a1e13bd6988a55745cf4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+  server:
+    build: ./server/
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CLIENT_URL: "http://client:80"
+      DATABASE_URL: "mongodb://root:root@database:27017/lista_zadan?authSource=admin"
+      JWTPRIVATEKEY: "Qhg4Ww6wv6rKaI7Sw/0by0mvNe5/eHKbs8jepDW5/r6Q8Ri+136pgmjUvzflRg72"
