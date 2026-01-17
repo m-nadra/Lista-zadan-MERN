@@ -17,7 +17,7 @@ export default function Task({ task }) {
         const editedTaskBody = {
             name: name,
             description: description,
-            date: date
+            date: date || ""
         }
         await editTask(task._id, editedTaskBody)
         setCurrentTask(editedTaskBody)
