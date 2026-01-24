@@ -4,12 +4,14 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import tasks from './routes/tasks.js'
 import auth from './routes/auth.js'
+import swagger from './docs/swagger.js'
 import morgan from 'morgan';
 
 const port = process.env.PORT
 const app = express()
 
 app.use(morgan(':date - :method :url - :status'))
+app.use(swagger)
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({

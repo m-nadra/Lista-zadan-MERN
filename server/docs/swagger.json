@@ -1,0 +1,37 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "TO-DO list app",
+    "description": "Endpoints for TO DO list application.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/signup": {
+      "post": {
+        "summary": "Create user account",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "john_doe"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "securePassword123"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
