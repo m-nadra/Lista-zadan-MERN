@@ -1,16 +1,22 @@
 import { hash, verify } from "argon2";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
+import logger from "../logger.js";
 import { User, userSchema } from "../models/User.js";
 
 const router = Router();
 
 router.post("/signup", async (req, res) => {
 	try {
+		logger.info("Signup attempt", { username: req.body.username });
 		const value = await userSchema.validateAsync(req.body);
 		const user = await User.create({
 			username: value.username,
 			password: await hash(value.password),
+		});
+		logger.info("User created successfully", {
+			userId: user._id,
+			username: user.username,
 		});
 		const token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, {
 			expiresIn: 60 * 15,
@@ -21,6 +27,10 @@ router.post("/signup", async (req, res) => {
 		});
 		res.status(201).json({ message: "User created successfully" });
 	} catch (err) {
+		logger.error("Signup error", {
+			error: err.message,
+			username: req.body.username,
+		});
 		if (err.code === 11000)
 			return res
 				.status(409)
@@ -32,13 +42,28 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
 	try {
+		logger.info("Login attempt", { username: req.body.username });
 		const value = await userSchema.validateAsync(req.body);
 		const user = await User.findOne({ username: value.username });
-		if (!user) return res.status(404).json({ error: "User not found" });
+		if (!user) {
+			logger.warn("Login failed - user not found", {
+				username: value.username,
+			});
+			return res.status(404).json({ error: "User not found" });
+		}
 
-		if (!(await verify(user.password, value.password)))
+		if (!(await verify(user.password, value.password))) {
+			logger.warn("Login failed - invalid password", {
+				userId: user._id,
+				username: user.username,
+			});
 			return res.status(401).json({ error: "Invalid password" });
+		}
 
+		logger.info("Login successful", {
+			userId: user._id,
+			username: user.username,
+		});
 		const token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, {
 			expiresIn: 60 * 15,
 		});
@@ -48,12 +73,17 @@ router.post("/login", async (req, res) => {
 		});
 		res.status(204).end();
 	} catch (err) {
+		logger.error("Login error", {
+			error: err.message,
+			username: req.body.username,
+		});
 		if (err.isJoi) return res.status(400).json(err.details);
 		res.status(500).json({ error: err.message });
 	}
 });
 
-router.post("/logout", (_, res) => {
+router.post("/logout", (req, res) => {
+	logger.info("Logout attempt", { ip: req.ip });
 	res.clearCookie("access_token");
 	res.status(204).end();
 });

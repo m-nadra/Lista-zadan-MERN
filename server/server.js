@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import swagger from "./docs/swagger.js";
+import logger from "./logger.js";
 import auth from "./routes/auth.js";
 import tasks from "./routes/tasks.js";
 
@@ -23,12 +24,12 @@ app.use(
 
 mongoose
 	.connect(process.env.DATABASE_URL)
-	.then(() => console.log("Connected to the database"))
-	.catch((err) => console.error(err));
+	.then(() => logger.info("Connected to the database"))
+	.catch((err) => logger.error(err));
 
 app.use("/api/tasks", tasks);
 app.use("/api", auth);
 
 app.listen(port, () => {
-	console.log(`Server is running at port ${port}`);
+	logger.info(`Server is running at port ${port}`);
 });
