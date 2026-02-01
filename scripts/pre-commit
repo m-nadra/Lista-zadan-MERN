@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+printf "Checking formatting..."
+if ! npx @biomejs/biome format --error-on-warnings --staged --no-errors-on-unmatched > /dev/null 2>&1; then
+    printf " ❌\nPlease run \e[1;34mnpm run format\e[0m and fix reported issues before committing.\n"
+    exit 1
+fi
+printf " ✔️\n"
+
+printf "Checking linting..."
+if ! npx @biomejs/biome lint --error-on-warnings --staged --no-errors-on-unmatched > /dev/null 2>&1; then
+    printf " ❌\nExecute \e[1;34mnpm run lint\e[0m and resolve all findings before proceeding.\n"
+    exit 2
+fi
+printf " ✔️\n"
+
+printf "All checks passed!\n"
