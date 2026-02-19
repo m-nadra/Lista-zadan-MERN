@@ -5,9 +5,9 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import swagger from "./docs/swagger.js";
 import logger from "./logger.js";
-import redis from "./redis.js";
 import auth from "./routes/auth.js";
 import tasks from "./routes/tasks.js";
+import redis from "./token.js";
 
 const port = process.env.PORT;
 const app = express();

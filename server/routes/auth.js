@@ -1,10 +1,8 @@
-import crypto from "node:crypto";
 import { hash, verify } from "argon2";
 import { Router } from "express";
-import jwt from "jsonwebtoken";
 import logger from "../logger.js";
 import { User, userSchema } from "../models/User.js";
-import redis from "../redis.js";
+import { access_token, refresh_token } from "../token.js";
 
 const router = Router();
 
@@ -20,10 +18,7 @@ router.post("/signup", async (req, res) => {
 			userId: user._id,
 			username: user.username,
 		});
-		const access_token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, {
-			expiresIn: 60 * 15,
-		});
-		res.cookie("access_token", access_token, {
+		res.cookie("access_token", await access_token(user._id), {
 			maxAge: 1000 * 60 * 15,
 			httpOnly: true,
 		});
@@ -61,26 +56,11 @@ router.post("/login", async (req, res) => {
 			});
 			return res.status(401).json({ error: "Invalid password" });
 		}
-		const access_token = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, {
-			expiresIn: 60 * 15,
-		});
-		const jti = crypto.randomUUID();
-		const refresh_token = jwt.sign(
-			{ id: user._id, jti: jti, type: "refresh" },
-			process.env.JWTPRIVATEKEY,
-			{
-				expiresIn: 60 * 24 * 7,
-			},
-		);
-		await redis.set(jti, user._id.toString(), {
-			EX: 60 * 60 * 24 * 7,
-			NX: true,
-		});
-		res.cookie("access_token", access_token, {
+		res.cookie("access_token", await access_token(user._id), {
 			maxAge: 1000 * 60 * 15,
 			httpOnly: true,
 		});
-		res.cookie("refresh_token", refresh_token, {
+		res.cookie("refresh_token", await refresh_token(user._id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
 		});

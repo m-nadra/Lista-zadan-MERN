@@ -1,0 +1,44 @@
+import jwt from "jsonwebtoken";
+import { createClient } from "redis";
+
+const redis = await createClient({ url: "redis://redis:6379" }).on(
+	"error",
+	(err) => logger.error(`[redis] ${err}`),
+);
+
+export const access_token = async (userId) =>
+	jwt.sign({ id: userId }, process.env.JWTPRIVATEKEY, {
+		expiresIn: 60 * 15,
+	});
+
+export const refresh_token = async (userId) => {
+	const jti = crypto.randomUUID();
+	await redis.set(jti, userId.toString(), {
+		EX: 60 * 60 * 24 * 7,
+		NX: true,
+	});
+	return jwt.sign(
+		{ id: userId.toString(), jti: jti, type: "refresh" },
+		process.env.JWTPRIVATEKEY,
+		{
+			expiresIn: 60 * 24 * 7,
+		},
+	);
+};
+
+export const getUserfromToken = (token) => {
+	try {
+		return jwt.verify(token, process.env.JWTPRIVATEKEY);
+	} catch (err) {
+		throw new InvalidToken(err.message);
+	}
+};
+
+class InvalidToken extends Error {
+	constructor(message) {
+		super(message);
+		this.name = "InvalidToken";
+	}
+}
+
+export default redis;

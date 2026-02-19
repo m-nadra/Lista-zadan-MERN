@@ -1,7 +1,7 @@
 import { Router } from "express";
-import jwt from "jsonwebtoken";
 import logger from "../logger.js";
 import { Task, taskSchema } from "../models/Task.js";
+import { getUserfromToken } from "../token.js";
 
 const router = Router();
 
@@ -16,8 +16,8 @@ router.use((req, res, next) => {
 			return res.status(401).json({ error: "Unauthorized" });
 		}
 
-		const payload = jwt.verify(token, process.env.JWTPRIVATEKEY);
-		req.userId = payload.id;
+		const user = getUserfromToken(token);
+		req.userId = user.id;
 		next();
 	} catch (err) {
 		logger.warn("Unauthorized access attempt - invalid token", {
