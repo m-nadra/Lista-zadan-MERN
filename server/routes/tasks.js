@@ -1,7 +1,7 @@
 import { Router } from "express";
 import logger from "../logger.js";
 import { Task, taskSchema } from "../models/Task.js";
-import { getUserfromToken } from "../token.js";
+import { getPayloadfromToken } from "../token.js";
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 			return res.status(401).json({ error: "Unauthorized" });
 		}
 
-		const user = getUserfromToken(token);
+		const user = getPayloadfromToken(token);
 		req.userId = user.id;
 		next();
 	} catch (err) {

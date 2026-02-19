@@ -2,7 +2,7 @@ import { hash, verify } from "argon2";
 import { Router } from "express";
 import logger from "../logger.js";
 import { User, userSchema } from "../models/User.js";
-import { access_token, refresh_token } from "../token.js";
+import { access_token, deleteTokenfromRedis, refresh_token } from "../token.js";
 
 const router = Router();
 
@@ -80,9 +80,10 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", async (req, res) => {
 	logger.info("Logout attempt", { ip: req.ip });
 	res.clearCookie("access_token");
+	await deleteTokenfromRedis(req.cookies.refresh_token);
 	res.clearCookie("refresh_token");
 	res.status(204).end();
 });

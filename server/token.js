@@ -26,12 +26,17 @@ export const refresh_token = async (userId) => {
 	);
 };
 
-export const getUserfromToken = (token) => {
+export const getPayloadfromToken = (token) => {
 	try {
 		return jwt.verify(token, process.env.JWTPRIVATEKEY);
 	} catch (err) {
 		throw new InvalidToken(err.message);
 	}
+};
+
+export const deleteTokenfromRedis = async (token) => {
+	const payload = getPayloadfromToken(token);
+	await redis.del(payload.jti);
 };
 
 class InvalidToken extends Error {
