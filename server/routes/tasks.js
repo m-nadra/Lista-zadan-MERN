@@ -7,7 +7,7 @@ const router = Router();
 
 router.use((req, res, next) => {
 	try {
-		const token = req.cookies.access_token;
+		const token = req.headers.authorization.split(" ")[1];
 		if (!token) {
 			logger.warn("Unauthorized access attempt - no token", {
 				ip: req.ip,

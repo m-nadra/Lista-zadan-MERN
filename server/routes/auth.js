@@ -14,15 +14,19 @@ router.post("/signup", async (req, res) => {
 			username: value.username,
 			password: await hash(value.password),
 		});
+		res.cookie("refresh_token", await refresh_token(user._id), {
+			maxAge: 1000 * 60 * 60 * 24 * 7,
+			httpOnly: true,
+		});
 		logger.info("User created successfully", {
 			userId: user._id,
 			username: user.username,
 		});
-		res.cookie("access_token", await access_token(user._id), {
-			maxAge: 1000 * 60 * 15,
-			httpOnly: true,
+		res.status(201).json({
+			message: "User created successfully",
+			accessToken: await access_token(user._id),
+			type: "Bearer",
 		});
-		res.status(201).json({ message: "User created successfully" });
 	} catch (err) {
 		logger.error("Signup error", {
 			error: err.message,
@@ -56,20 +60,19 @@ router.post("/login", async (req, res) => {
 			});
 			return res.status(401).json({ error: "Invalid password" });
 		}
-		res.cookie("access_token", await access_token(user._id), {
-			maxAge: 1000 * 60 * 15,
-			httpOnly: true,
-		});
 		res.cookie("refresh_token", await refresh_token(user._id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
 		});
-
 		logger.info("Login successful", {
 			userId: user._id,
 			username: user.username,
 		});
-		res.status(204).end();
+		res.status(200).json({
+			message: "Login successful",
+			accessToken: await access_token(user._id),
+			type: "Bearer",
+		});
 	} catch (err) {
 		logger.error("Login error", {
 			error: err.message,
@@ -82,7 +85,6 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", async (req, res) => {
 	logger.info("Logout attempt", { ip: req.ip });
-	res.clearCookie("access_token");
 	await deleteTokenfromRedis(req.cookies.refresh_token);
 	res.clearCookie("refresh_token");
 	res.status(204).end();

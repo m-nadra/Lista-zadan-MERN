@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuthContext } from "../contexts/AuthContext";
 import useApi from "./useApi";
 
 export const useAuth = () => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
 	const api = useApi();
+	const { setAccessToken } = useAuthContext();
 	const handleSignup = async (username, password, password2) => {
 		if (password !== password2)
 			return setErrorMessage("Hasła nie są takie same");
@@ -18,6 +20,9 @@ export const useAuth = () => {
 				return setErrorMessage("Nazwa użytkownika jest zajęta");
 			if (response.status === 500)
 				return setErrorMessage("Wystąpił błąd po stronie serwera.");
+
+			const data = await response.json();
+			setAccessToken(data.accessToken);
 			navigate("/");
 		} catch (err) {
 			setErrorMessage(err);
@@ -36,6 +41,8 @@ export const useAuth = () => {
 			if (response.status === 500)
 				return setErrorMessage("Wystąpił błąd po stronie serwera.");
 
+			const data = await response.json();
+			setAccessToken(data.accessToken);
 			navigate("/");
 		} catch (err) {
 			setErrorMessage(err);
