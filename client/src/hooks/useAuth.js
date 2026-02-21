@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import api from "../api";
+import useApi from "./useApi";
 
 export const useAuth = () => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
+	const api = useApi();
 	const handleSignup = async (username, password, password2) => {
 		if (password !== password2)
 			return setErrorMessage("Hasła nie są takie same");

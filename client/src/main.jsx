@@ -5,20 +5,23 @@ import Main from "./components/Main";
 import Signup from "./components/Signup";
 import { TaskProvider } from "./contexts/TaskContext";
 import "./styles/globals.css";
+import { AuthProvider } from "./contexts/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<BrowserRouter>
-		<Routes>
-			<Route
-				path="/"
-				element={
-					<TaskProvider>
-						<Main />
-					</TaskProvider>
-				}
-			/>
-			<Route path="/signup" element={<Signup />} />
-			<Route path="/login" element={<Login />} />
-		</Routes>
+		<AuthProvider>
+			<Routes>
+				<Route
+					path="/"
+					element={
+						<TaskProvider>
+							<Main />
+						</TaskProvider>
+					}
+				/>
+				<Route path="/signup" element={<Signup />} />
+				<Route path="/login" element={<Login />} />
+			</Routes>
+		</AuthProvider>
 	</BrowserRouter>,
 );

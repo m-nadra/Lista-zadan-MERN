@@ -1,13 +1,16 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import api from "../api";
+import useApi from "./useApi";
 
 export const useTask = () => {
 	const [tasks, setTasks] = useState([]);
 	const navigate = useNavigate();
+	const api = useApi();
+	const apiRef = useRef(api);
+	apiRef.current = api;
 	const getTasks = useCallback(async () => {
 		try {
-			const response = await api.get("api/tasks");
+			const response = await apiRef.current.get("api/tasks");
 			if (response.status === 401) return navigate("/login");
 			setTasks(await response.json());
 		} catch {
