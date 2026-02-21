@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import api from "../api";
 
 export const useAuth = () => {
 	const [errorMessage, setErrorMessage] = useState("");
@@ -8,16 +9,9 @@ export const useAuth = () => {
 		if (password !== password2)
 			return setErrorMessage("Hasła nie są takie same");
 		try {
-			const response = await fetch("api/signup", {
-				method: "POST",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					username: username,
-					password: password,
-				}),
+			const response = await api.post("api/signup", {
+				username: username,
+				password: password,
 			});
 			if (response.status === 409)
 				return setErrorMessage("Nazwa użytkownika jest zajęta");
@@ -30,16 +24,9 @@ export const useAuth = () => {
 	};
 	const handleLogin = async (username, password) => {
 		try {
-			const response = await fetch("api/login", {
-				method: "POST",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					username: username,
-					password: password,
-				}),
+			const response = await api.post("api/login", {
+				username: username,
+				password: password,
 			});
 			if (response.status === 401)
 				return setErrorMessage("Nieprawidłowe hasło");
@@ -54,10 +41,7 @@ export const useAuth = () => {
 		}
 	};
 	const handleLogout = async () => {
-		await fetch("api/logout", {
-			method: "POST",
-			credentials: "include",
-		});
+		await api.post("api/logout");
 		navigate("/login");
 	};
 	return { handleLogin, errorMessage, handleLogout, handleSignup };
