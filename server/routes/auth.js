@@ -2,7 +2,13 @@ import { hash, verify } from "argon2";
 import { Router } from "express";
 import logger from "../logger.js";
 import { User, userSchema } from "../models/User.js";
-import { access_token, deleteTokenfromRedis, refresh_token } from "../token.js";
+import {
+	deleteTokenfromRedis,
+	getAccessToken,
+	getPayloadfromToken,
+	getRefreshToken,
+	verifyRefreshTokenPayload,
+} from "../token.js";
 
 const router = Router();
 
@@ -14,7 +20,7 @@ router.post("/signup", async (req, res) => {
 			username: value.username,
 			password: await hash(value.password),
 		});
-		res.cookie("refresh_token", await refresh_token(user._id), {
+		res.cookie("refreshToken", await getRefreshToken(user._id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
 		});
@@ -24,7 +30,7 @@ router.post("/signup", async (req, res) => {
 		});
 		res.status(201).json({
 			message: "User created successfully",
-			accessToken: await access_token(user._id),
+			accessToken: await getAccessToken(user._id),
 			type: "Bearer",
 		});
 	} catch (err) {
@@ -60,7 +66,7 @@ router.post("/login", async (req, res) => {
 			});
 			return res.status(401).json({ error: "Invalid password" });
 		}
-		res.cookie("refresh_token", await refresh_token(user._id), {
+		res.cookie("refreshToken", await getRefreshToken(user._id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
 		});
@@ -70,7 +76,7 @@ router.post("/login", async (req, res) => {
 		});
 		res.status(200).json({
 			message: "Login successful",
-			accessToken: await access_token(user._id),
+			accessToken: await getAccessToken(user._id),
 			type: "Bearer",
 		});
 	} catch (err) {
@@ -85,9 +91,46 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", async (req, res) => {
 	logger.info("Logout attempt", { ip: req.ip });
-	await deleteTokenfromRedis(req.cookies.refresh_token);
-	res.clearCookie("refresh_token");
+	await deleteTokenfromRedis(req.cookies.refreshToken);
+	res.clearCookie("refreshToken");
 	res.status(204).end();
 });
 
+router.post("/refresh", async (req, res) => {
+	try {
+		const refreshToken = req.cookies.refreshToken;
+		if (!refreshToken) {
+			logger.warn("Unauthorized access attempt - no token", {
+				ip: req.ip,
+				path: req.path,
+			});
+			return res.status(401).json({ error: "Unauthorized" });
+		}
+		const payload = await getPayloadfromToken(refreshToken);
+		if (!verifyRefreshTokenPayload(payload)) {
+			logger.warn("Unauthorized access attempt - invalid token", {
+				ip: req.ip,
+				path: req.path,
+			});
+			return res.status(401).json({ error: "Unauthorized" });
+		}
+		res.cookie("refresh_token", await getRefreshToken(payload.id), {
+			maxAge: 1000 * 60 * 60 * 24 * 7,
+			httpOnly: true,
+		});
+		logger.info("Tokens has been refreshed");
+		res.status(201).json({
+			message: "Access token created",
+			accessToken: await getAccessToken(payload.id),
+			type: "Bearer",
+		});
+	} catch (err) {
+		logger.warn("Unauthorized access attempt - invalid token", {
+			ip: req.ip,
+			path: req.path,
+			error: err.message,
+		});
+		return res.status(401).json({ error: "Invalid token" });
+	}
+});
 export default router;
