@@ -14,11 +14,7 @@ export default function useApi() {
 		};
 		try {
 			const response = await fetch(url, config);
-			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "API Error");
-			}
-			return await response;
+			return response;
 		} catch (err) {
 			console.error(err);
 			throw err;

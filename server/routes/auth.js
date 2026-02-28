@@ -104,7 +104,7 @@ router.post("/refresh", async (req, res) => {
 				ip: req.ip,
 				path: req.path,
 			});
-			return res.status(401).json({ error: "Unauthorized" });
+			return res.status(401).json({ error: "Unauthorized - no token" });
 		}
 		const payload = await getPayloadfromToken(refreshToken);
 		if (!verifyRefreshTokenPayload(payload)) {
@@ -112,9 +112,9 @@ router.post("/refresh", async (req, res) => {
 				ip: req.ip,
 				path: req.path,
 			});
-			return res.status(401).json({ error: "Unauthorized" });
+			return res.status(401).json({ error: "Unauthorized - invalid token" });
 		}
-		res.cookie("refresh_token", await getRefreshToken(payload.id), {
+		res.cookie("refreshToken", await getRefreshToken(payload.id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
 		});

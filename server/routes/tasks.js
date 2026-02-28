@@ -7,7 +7,7 @@ const router = Router();
 
 router.use((req, res, next) => {
 	try {
-		const token = req.headers.authorization.split(" ")[1];
+		const token = req.headers.authorization;
 		if (!token) {
 			logger.warn("Unauthorized access attempt - no token", {
 				ip: req.ip,
@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 			return res.status(401).json({ error: "Unauthorized" });
 		}
 
-		const user = getPayloadfromToken(token);
+		const user = getPayloadfromToken(token.split(" ")[1]);
 		req.userId = user.id;
 		next();
 	} catch (err) {
