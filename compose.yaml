@@ -10,6 +10,13 @@ services:
       - database-data:/data/db
     profiles: [prod, dev]
 
+  redis:
+    image: redis:8.2.4-alpine@sha256:71179d1836f5400125888fb073b8e1956458733db3b3a201b13f3bfb7730fb94
+    restart: always
+    expose:
+      - 6379
+    profiles: [prod, dev]
+
   server:
     build: ./server/
     expose:

@@ -7,6 +7,7 @@ import swagger from "./docs/swagger.js";
 import logger from "./logger.js";
 import auth from "./routes/auth.js";
 import tasks from "./routes/tasks.js";
+import redis from "./token.js";
 
 const port = process.env.PORT;
 const app = express();
@@ -24,7 +25,12 @@ app.use(
 
 mongoose
 	.connect(process.env.DATABASE_URL)
-	.then(() => logger.info("Connected to the database"))
+	.then(() => logger.info("Connected to MongoDB"))
+	.catch((err) => logger.error(err));
+
+redis
+	.connect()
+	.then(() => logger.info("Connected to Redis"))
 	.catch((err) => logger.error(err));
 
 app.use("/api/tasks", tasks);

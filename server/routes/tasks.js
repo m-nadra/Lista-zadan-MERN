@@ -1,13 +1,13 @@
 import { Router } from "express";
-import jwt from "jsonwebtoken";
 import logger from "../logger.js";
 import { Task, taskSchema } from "../models/Task.js";
+import { getPayloadfromToken } from "../token.js";
 
 const router = Router();
 
 router.use((req, res, next) => {
 	try {
-		const token = req.cookies.access_token;
+		const token = req.headers.authorization;
 		if (!token) {
 			logger.warn("Unauthorized access attempt - no token", {
 				ip: req.ip,
@@ -16,8 +16,8 @@ router.use((req, res, next) => {
 			return res.status(401).json({ error: "Unauthorized" });
 		}
 
-		const payload = jwt.verify(token, process.env.JWTPRIVATEKEY);
-		req.userId = payload.id;
+		const user = getPayloadfromToken(token.split(" ")[1]);
+		req.userId = user.id;
 		next();
 	} catch (err) {
 		logger.warn("Unauthorized access attempt - invalid token", {
