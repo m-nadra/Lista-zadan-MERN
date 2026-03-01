@@ -3,7 +3,7 @@ import { useTaskContext } from "../contexts/TaskContext";
 
 export default function Task({ task }) {
 	const [currentTask, setCurrentTask] = useState(task);
-	const { deleteTask, editTask } = useTaskContext();
+	const { actions } = useTaskContext();
 	const [isEditing, setIsEditing] = useState(false);
 	const [name, setName] = useState(task.name);
 	const [description, setDescription] = useState(task.description);
@@ -19,7 +19,7 @@ export default function Task({ task }) {
 			description: description,
 			date: date || "",
 		};
-		await editTask(task._id, editedTaskBody);
+		await actions.edit(task._id, editedTaskBody);
 		setCurrentTask(editedTaskBody);
 		setIsEditing(false);
 	};
@@ -73,7 +73,7 @@ export default function Task({ task }) {
 						<button type="button" onClick={() => setIsEditing(true)}>
 							Edytuj
 						</button>
-						<button type="button" onClick={() => deleteTask(task._id)}>
+						<button type="button" onClick={() => actions.delete(task._id)}>
 							Usuń
 						</button>
 					</td>

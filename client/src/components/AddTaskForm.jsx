@@ -3,13 +3,13 @@ import { useTaskContext } from "../contexts/TaskContext";
 import styles from "../styles/task.module.css";
 
 export default function AddTaskForm({ onClose }) {
-	const { addTask } = useTaskContext();
+	const { actions } = useTaskContext();
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [date, setDate] = useState("");
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		await addTask({
+		await actions.add({
 			name: name,
 			description: description,
 			date: date,

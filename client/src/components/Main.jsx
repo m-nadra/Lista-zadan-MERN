@@ -1,5 +1,4 @@
-import { Activity, useEffect, useState } from "react";
-import { useTaskContext } from "../contexts/TaskContext";
+import { Activity, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import styles from "../styles/task.module.css";
 import AddTaskForm from "./AddTaskForm";
@@ -7,11 +6,7 @@ import TaskTable from "./TaskTable";
 
 export default function Main() {
 	const { handleLogout } = useAuth();
-	const { getTasks } = useTaskContext();
 	const [showForm, setShowForm] = useState(false);
-	useEffect(() => {
-		getTasks();
-	}, [getTasks]);
 	return (
 		<main className={styles.main}>
 			<section className={styles.tasks}>
