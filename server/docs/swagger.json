@@ -158,7 +158,7 @@
 			"get": {
 				"summary": "Get all tasks for authenticated user",
 				"tags": ["Tasks"],
-				"security": [{ "cookieAuth": [] }],
+				"security": [{ "bearerAuth": [] }],
 				"responses": {
 					"200": {
 						"description": "List of tasks",
@@ -220,7 +220,7 @@
 			"post": {
 				"summary": "Create a new task",
 				"tags": ["Tasks"],
-				"security": [{ "cookieAuth": [] }],
+				"security": [{ "bearerAuth": [] }],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -297,7 +297,7 @@
 			"put": {
 				"summary": "Update a task",
 				"tags": ["Tasks"],
-				"security": [{ "cookieAuth": [] }],
+				"security": [{ "bearerAuth": [] }],
 				"parameters": [
 					{
 						"name": "id",
@@ -415,7 +415,7 @@
 			"delete": {
 				"summary": "Delete a task",
 				"tags": ["Tasks"],
-				"security": [{ "cookieAuth": [] }],
+				"security": [{ "bearerAuth": [] }],
 				"parameters": [
 					{
 						"name": "id",
@@ -474,6 +474,13 @@
 		}
 	},
 	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
 		"schemas": {
 			"Task": {
 				"type": "object",
