@@ -1,0 +1,40 @@
+name: Lint and Format Check
+
+on:
+  push:
+    branches: [ main ]
+    paths: &code_paths
+      - "client/**"
+      - "server/**"
+    paths-ignore: &ignore_paths
+      - "**/Dockerfile"
+      - "**/.dockerignore"
+      - "**/nginx.conf"
+      - "**/package.json"
+      - "**/package-lock.json"
+      
+  pull_request:
+    branches: [ main ]
+    paths: *code_paths
+    paths-ignore: *ignore_paths
+
+jobs:
+  biome-checks:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: "2.3.12"
+          
+      - name: Run Biome checks
+        run: biome ci --reporter=github client server
