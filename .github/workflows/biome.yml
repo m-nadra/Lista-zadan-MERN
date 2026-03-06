@@ -6,17 +6,10 @@ on:
     paths: &code_paths
       - "client/**"
       - "server/**"
-    paths-ignore: &ignore_paths
-      - "**/Dockerfile"
-      - "**/.dockerignore"
-      - "**/nginx.conf"
-      - "**/package.json"
-      - "**/package-lock.json"
       
   pull_request:
     branches: [ main ]
     paths: *code_paths
-    paths-ignore: *ignore_paths
 
 jobs:
   biome-checks:
