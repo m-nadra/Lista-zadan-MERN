@@ -1,27 +1,87 @@
-# Lista zadań
-Aplikacja jest projektem zaliczeniowym z przedmiotu "Aplikacje internetowe"
+# Task Manager (Lista zadań)
 
-## Wykorzystane technologie
+A full-stack task management application built with the MERN stack (MongoDB, Express, React, Node.js). 
 
-**Client**: React + Vite
+---
 
-**Server**: Express JS + MongoDB
+## 🛠️ Technologies
 
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React + Vite |
+| **Backend** | Express.js |
+| **Database** | MongoDB |
+| **Session Storage** | Redis |
+| **Styling** | CSS Modules |
 
-## Opis działania aplikacji
-Należy rozpocząć od założenia konta. Po pomyślnej rejestracji pojawi się pusta lista zadań.
-Hasła w bazie danych są przechowywane w formie hashy obliczanych za pomocą algorytmu argon2id.
-Czas sesji wynosi 15 minut. Gdy upłynie należy zalogować się ponownie.
+---
 
-Aplikacja umożliwia wyświetlanie, dodawanie, edytowanie i usuwanie zadań. 
-Każdy użytkownik może pracować tylko na swoich zadaniach. Możliwe jest założenie wielu kont, każde z innymi zadaniami.
+## 🏗️ Architecture
 
-Struktura zadania: 
+```
+Lista-zadan-MERN/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/    # UI components (Login, Signup, TaskTable, etc.)
+│   │   ├── contexts/       # React Context (AuthContext, TaskContext)
+│   │   ├── hooks/         # Custom hooks (useApi, useAuth, useTask)
+│   │   ├── routes/        # Route guards (ProtectedRoute, PublicRoute)
+│   │   └── styles/        # CSS Modules
+│   └── Dockerfile
+│
+├── server/                 # Express backend
+│   ├── docs/              # Swagger documentation
+│   ├── models/            # Mongoose schemas (User, Task)
+│   ├── routes/            # API routes (auth, tasks)
+│   ├── server.js          # Main entry point
+│   ├── token.js           # Redis session management
+│   └── logger.js          # Winston logger
+│
+└── compose.yaml           # Docker Compose configuration
+```
 
-* **Nazwa** - pole obowiązkowe
-* **Opis i data** - pola opcjonalne
-* **user** - pole w celach autoryzacji, dodawane po stronie serwera
+### API Endpoints
 
-Aplikacja waliduje formularze po stronie klienta i serwera.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/register` | User registration |
+| `POST` | `/api/login` | User login |
+| `POST` | `/api/logout` | User logout |
+| `GET` | `/api/tasks` | Get all user tasks |
+| `POST` | `/api/tasks` | Create new task |
+| `PUT` | `/api/tasks/:id` | Update task |
+| `DELETE` | `/api/tasks/:id` | Delete task |
 
-Po zakończeniu pracy należy się wylogować z aplikacji.
+---
+
+## 📋 Features
+
+- **User Authentication** - Register and login with secure password hashing (Argon2id)
+- **Session Management** - JWT-based sessions stored in Redis (15-minute expiration)
+- **Task CRUD** - Create, read, update, and delete tasks
+- **Authorization** - Users can only access their own tasks
+- **Form Validation** - Client-side and server-side validation
+- **API Documentation** - Swagger UI available for server at `/docs`
+
+---
+
+## 📝 Task Schema
+
+| Field | Type | Required |
+|-------|------|----------|
+| `title` | String | Yes |
+| `description` | String | No |
+| `date` | Date | No |
+| `user` | ObjectId | Auto (from session) |
+
+---
+
+## 🚀 Getting Started
+
+### Docker Deployment
+
+```bash
+docker compose --profile dev up --watch
+```
+
+---
