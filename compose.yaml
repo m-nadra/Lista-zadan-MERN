@@ -18,7 +18,7 @@ services:
     profiles: [prod, dev]
 
   server:
-    build: ./server/
+    image: ghcr.io/m-nadra/lista-zadan-mern-server:latest
     expose:
       - 3000
     environment:
@@ -30,7 +30,7 @@ services:
     profiles: [prod]
 
   client:
-    build: ./client/
+    image: ghcr.io/m-nadra/lista-zadan-mern-client:latest
     ports:
       - "80:80"
     profiles: [prod]
