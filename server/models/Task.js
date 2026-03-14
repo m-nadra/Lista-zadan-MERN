@@ -10,13 +10,13 @@ export const Task = model(
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true,
-		},
-	}),
+			required: true
+		}
+	})
 );
 
 export const taskSchema = Joi.object({
 	name: Joi.string().required(),
 	description: Joi.string().optional().allow(""),
-	date: Joi.date().optional().allow(""),
+	date: Joi.date().optional().allow("")
 });

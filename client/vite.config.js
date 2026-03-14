@@ -6,8 +6,8 @@ export default {
 		proxy: {
 			"/api": {
 				target: "http://server-dev:3000",
-				changeOrigin: true,
-			},
-		},
-	},
+				changeOrigin: true
+			}
+		}
+	}
 };

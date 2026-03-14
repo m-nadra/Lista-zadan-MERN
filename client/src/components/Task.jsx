@@ -17,7 +17,7 @@ export default function Task({ task }) {
 		const editedTaskBody = {
 			name: name,
 			description: description,
-			date: date || "",
+			date: date || ""
 		};
 		await actions.edit(task._id, editedTaskBody);
 		setCurrentTask(editedTaskBody);
@@ -34,25 +34,16 @@ export default function Task({ task }) {
 			{isEditing ? (
 				<>
 					<td>
-						<input
-							type="text"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							required
-						/>
+						<input type="text" value={name} onChange={e => setName(e.target.value)} required />
 					</td>
 					<td>
-						<input
-							type="text"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
-						/>
+						<input type="text" value={description} onChange={e => setDescription(e.target.value)} />
 					</td>
 					<td>
 						<input
 							type="date"
 							value={date?.split("T")[0] || ""}
-							onChange={(e) => setDate(e.target.value)}
+							onChange={e => setDate(e.target.value)}
 						/>
 					</td>
 					<td>
