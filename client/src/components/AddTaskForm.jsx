@@ -7,12 +7,12 @@ export default function AddTaskForm({ onClose }) {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [date, setDate] = useState("");
-	const handleSubmit = async (e) => {
+	const handleSubmit = async e => {
 		e.preventDefault();
 		await actions.add({
 			name: name,
 			description: description,
-			date: date,
+			date: date
 		});
 		onClose(false);
 	};
@@ -20,27 +20,16 @@ export default function AddTaskForm({ onClose }) {
 		<form onSubmit={handleSubmit} className={styles.form}>
 			<h1>Dodaj nowe zadanie</h1>
 			<label htmlFor="name">Nazwa zadania</label>
-			<input
-				type="text"
-				id="name"
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				required
-			/>
+			<input type="text" id="name" value={name} onChange={e => setName(e.target.value)} required />
 			<label htmlFor="description">Opis</label>
 			<input
 				type="text"
 				id="description"
 				value={description}
-				onChange={(e) => setDescription(e.target.value)}
+				onChange={e => setDescription(e.target.value)}
 			/>
 			<label htmlFor="date">Data</label>
-			<input
-				type="date"
-				id="date"
-				value={date}
-				onChange={(e) => setDate(e.target.value)}
-			/>
+			<input type="date" id="date" value={date} onChange={e => setDate(e.target.value)} />
 			<input type="submit" value="Wyślij" />
 		</form>
 	);

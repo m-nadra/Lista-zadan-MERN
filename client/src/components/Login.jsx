@@ -7,7 +7,7 @@ export default function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const { handleLogin, errorMessage } = useAuth();
-	const handleSubmit = (e) => {
+	const handleSubmit = e => {
 		e.preventDefault();
 		handleLogin(username, password);
 	};
@@ -21,7 +21,7 @@ export default function Login() {
 					type="text"
 					id="username"
 					value={username}
-					onChange={(e) => setUsername(e.target.value)}
+					onChange={e => setUsername(e.target.value)}
 					required
 				/>
 				<label htmlFor="password">Hasło</label>
@@ -29,7 +29,7 @@ export default function Login() {
 					type="password"
 					id="password"
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={e => setPassword(e.target.value)}
 					required
 				/>
 				<input type="submit" value="Zaloguj się" />

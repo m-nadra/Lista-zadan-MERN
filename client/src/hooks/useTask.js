@@ -14,20 +14,20 @@ export const useTask = () => {
 	return {
 		tasks,
 		actions: {
-			add: async (task) => {
+			add: async task => {
 				const response = await api.post("api/tasks", task);
 				const newTask = await response.json();
-				setTasks((prev) => [...prev, newTask]);
+				setTasks(prev => [...prev, newTask]);
 			},
 			edit: async (taskId, task) => {
 				const response = await api.put(`api/tasks/${taskId}`, task);
 				const newTask = await response.json();
-				setTasks((prev) => prev.map((t) => (t._id === taskId ? newTask : t)));
+				setTasks(prev => prev.map(t => (t._id === taskId ? newTask : t)));
 			},
-			delete: async (taskId) => {
+			delete: async taskId => {
 				await api.delete(`api/tasks/${taskId}`);
-				setTasks((prev) => prev.filter((t) => t._id !== taskId));
-			},
-		},
+				setTasks(prev => prev.filter(t => t._id !== taskId));
+			}
+		}
 	};
 };

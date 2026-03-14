@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 		const getAccessToken = async () => {
 			const response = await fetch("/api/refresh", {
 				method: "POST",
-				credentials: "include",
+				credentials: "include"
 			});
 			if (!response.ok) {
 				setAccessToken(null);
@@ -24,9 +24,7 @@ export const AuthProvider = ({ children }) => {
 	}, []);
 
 	return (
-		<AuthContext.Provider
-			value={{ accessToken, setAccessToken, status, setStatus }}
-		>
+		<AuthContext.Provider value={{ accessToken, setAccessToken, status, setStatus }}>
 			{children}
 		</AuthContext.Provider>
 	);
