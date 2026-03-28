@@ -8,7 +8,7 @@ export default function Signup() {
 	const [password, setPassword] = useState("");
 	const [password2, setPassword2] = useState("");
 	const { handleSignup, errorMessage } = useAuth();
-	const handleSubmit = (e) => {
+	const handleSubmit = e => {
 		e.preventDefault();
 		handleSignup(username, password, password2);
 	};
@@ -22,7 +22,7 @@ export default function Signup() {
 					type="text"
 					id="username"
 					value={username}
-					onChange={(e) => setUsername(e.target.value)}
+					onChange={e => setUsername(e.target.value)}
 					required
 				/>
 				<label htmlFor="password">Hasło</label>
@@ -30,7 +30,7 @@ export default function Signup() {
 					type="password"
 					id="password"
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={e => setPassword(e.target.value)}
 					required
 				/>
 				<label htmlFor="password">Powtórz hasło</label>
@@ -38,7 +38,7 @@ export default function Signup() {
 					type="password"
 					id="password2"
 					value={password2}
-					onChange={(e) => setPassword2(e.target.value)}
+					onChange={e => setPassword2(e.target.value)}
 					required
 				/>
 				<input type="submit" value="Załóż konto" />

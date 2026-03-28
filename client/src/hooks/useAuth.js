@@ -7,19 +7,17 @@ export const useAuth = () => {
 	const api = useApi();
 	const { setAccessToken, setStatus } = useAuthContext();
 	const handleSignup = async (username, password, password2) => {
-		if (password !== password2)
-			return setErrorMessage("Hasła nie są takie same");
+		if (password !== password2) return setErrorMessage("Hasła nie są takie same");
 		try {
 			const response = await api.post("api/signup", {
 				username: username,
-				password: password,
+				password: password
 			});
 			if (response.ok) {
 				const data = await response.json();
 				setAccessToken(data.accessToken);
 				setStatus("authenticated");
-			} else if (response.status === 409)
-				setErrorMessage("Nazwa użytkownika jest zajęta");
+			} else if (response.status === 409) setErrorMessage("Nazwa użytkownika jest zajęta");
 			else setErrorMessage("Wystąpił błąd po stronie serwera.");
 		} catch (err) {
 			setErrorMessage(err.message);
@@ -29,7 +27,7 @@ export const useAuth = () => {
 		try {
 			const response = await api.post("api/login", {
 				username: username,
-				password: password,
+				password: password
 			});
 			if (response.ok) {
 				const data = await response.json();
@@ -37,8 +35,7 @@ export const useAuth = () => {
 				setStatus("authenticated");
 			}
 			if (response.status === 401) setErrorMessage("Nieprawidłowe hasło");
-			else if (response.status === 404)
-				setErrorMessage("Użytkownik nie istnieje");
+			else if (response.status === 404) setErrorMessage("Użytkownik nie istnieje");
 			else setErrorMessage("Wystąpił błąd po stronie serwera.");
 		} catch (err) {
 			setErrorMessage(err.message);

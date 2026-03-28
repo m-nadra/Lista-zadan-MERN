@@ -19,20 +19,20 @@ app.use(cookieParser());
 app.use(
 	cors({
 		origin: process.env.CLIENT_URL,
-		credentials: true,
-	}),
+		credentials: true
+	})
 );
 app.set("trust proxy", "1");
 
 mongoose
 	.connect(process.env.DATABASE_URL)
 	.then(() => logger.info("Connected to MongoDB"))
-	.catch((err) => logger.error(err));
+	.catch(err => logger.error(err));
 
 redis
 	.connect()
 	.then(() => logger.info("Connected to Redis"))
-	.catch((err) => logger.error(err));
+	.catch(err => logger.error(err));
 
 app.use("/api/tasks", tasks);
 app.use("/api", auth);

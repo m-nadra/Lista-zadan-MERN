@@ -11,8 +11,8 @@ export default function useApi() {
 				headers: {
 					"Content-Type": "application/json",
 					...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-					...options.headers,
-				},
+					...options.headers
+				}
 			};
 			try {
 				const response = await fetch(url, config);
@@ -24,26 +24,26 @@ export default function useApi() {
 				setAccessToken(null);
 			}
 		},
-		[accessToken, setAccessToken, setStatus],
+		[accessToken, setAccessToken, setStatus]
 	);
 	return useMemo(
 		() => ({
-			get: (url) => apiFetch(url),
+			get: url => apiFetch(url),
 			post: (url, body) =>
 				apiFetch(url, {
 					method: "POST",
-					body: JSON.stringify(body),
+					body: JSON.stringify(body)
 				}),
 			put: (url, body) =>
 				apiFetch(url, {
 					method: "PUT",
-					body: JSON.stringify(body),
+					body: JSON.stringify(body)
 				}),
-			delete: (url) =>
+			delete: url =>
 				apiFetch(url, {
-					method: "DELETE",
-				}),
+					method: "DELETE"
+				})
 		}),
-		[apiFetch],
+		[apiFetch]
 	);
 }

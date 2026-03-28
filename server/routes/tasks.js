@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 		if (!token) {
 			logger.warn("Unauthorized access attempt - no token", {
 				ip: req.ip,
-				path: req.path,
+				path: req.path
 			});
 			return res.status(401).json({ error: "Unauthorized" });
 		}
@@ -23,7 +23,7 @@ router.use((req, res, next) => {
 		logger.warn("Unauthorized access attempt - invalid token", {
 			ip: req.ip,
 			path: req.path,
-			error: err.message,
+			error: err.message
 		});
 		return res.status(401).json({ error: "Invalid token" });
 	}
@@ -35,13 +35,13 @@ router.get("/", async (req, res) => {
 		const tasks = await Task.find({ user: req.userId });
 		logger.info("Tasks fetched successfully", {
 			userId: req.userId,
-			count: tasks.length,
+			count: tasks.length
 		});
 		res.status(200).json(tasks);
 	} catch (err) {
 		logger.error("Error fetching tasks", {
 			userId: req.userId,
-			error: err.message,
+			error: err.message
 		});
 		res.status(500).json({ error: err.message });
 	}
@@ -53,18 +53,18 @@ router.post("/", async (req, res) => {
 		const value = await taskSchema.validateAsync(req.body);
 		const task = await Task.create({
 			...value,
-			user: req.userId,
+			user: req.userId
 		});
 		logger.info("Task created successfully", {
 			userId: req.userId,
-			taskId: task._id,
+			taskId: task._id
 		});
 		res.status(201).json(task);
 	} catch (err) {
 		logger.error("Error creating task", {
 			userId: req.userId,
 			error: err.message,
-			taskData: req.body,
+			taskData: req.body
 		});
 		if (err.isJoi) return res.status(400).json(err.details);
 		res.status(500).json({ error: err.message });
@@ -76,13 +76,13 @@ router.put("/:id", async (req, res) => {
 		logger.info("Updating task", {
 			userId: req.userId,
 			taskId: req.params.id,
-			updateData: req.body,
+			updateData: req.body
 		});
 		const task = await Task.findById(req.params.id);
 		if (!task) {
 			logger.warn("Update failed - task not found", {
 				userId: req.userId,
-				taskId: req.params.id,
+				taskId: req.params.id
 			});
 			return res.status(404).json({ error: "Task not found" });
 		}
@@ -91,25 +91,23 @@ router.put("/:id", async (req, res) => {
 			logger.warn("Update failed - unauthorized", {
 				userId: req.userId,
 				taskId: req.params.id,
-				taskOwner: task.user,
+				taskOwner: task.user
 			});
-			return res
-				.status(403)
-				.json({ error: "You can only edit your own tasks" });
+			return res.status(403).json({ error: "You can only edit your own tasks" });
 		}
 
 		const value = await taskSchema.validateAsync(req.body);
 		const updatedTask = await Task.findByIdAndUpdate(req.params.id, value);
 		logger.info("Task updated successfully", {
 			userId: req.userId,
-			taskId: req.params.id,
+			taskId: req.params.id
 		});
 		res.status(200).json(updatedTask);
 	} catch (err) {
 		logger.error("Error updating task", {
 			userId: req.userId,
 			taskId: req.params.id,
-			error: err.message,
+			error: err.message
 		});
 		if (err.isJoi) return res.status(400).json(err.details);
 		res.status(500).json({ error: err.message });
@@ -123,7 +121,7 @@ router.delete("/:id", async (req, res) => {
 		if (!task) {
 			logger.warn("Delete failed - task not found", {
 				userId: req.userId,
-				taskId: req.params.id,
+				taskId: req.params.id
 			});
 			return res.status(404).json({ error: "Task not found" });
 		}
@@ -132,24 +130,22 @@ router.delete("/:id", async (req, res) => {
 			logger.warn("Delete failed - unauthorized", {
 				userId: req.userId,
 				taskId: req.params.id,
-				taskOwner: task.user,
+				taskOwner: task.user
 			});
-			return res
-				.status(403)
-				.json({ error: "You can only remove your own tasks" });
+			return res.status(403).json({ error: "You can only remove your own tasks" });
 		}
 
 		await Task.findByIdAndDelete(req.params.id);
 		logger.info("Task deleted successfully", {
 			userId: req.userId,
-			taskId: req.params.id,
+			taskId: req.params.id
 		});
 		res.status(204).end();
 	} catch (err) {
 		logger.error("Error deleting task", {
 			userId: req.userId,
 			taskId: req.params.id,
-			error: err.message,
+			error: err.message
 		});
 		res.status(500).json({ error: err.message });
 	}
