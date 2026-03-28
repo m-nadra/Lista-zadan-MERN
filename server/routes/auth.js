@@ -23,6 +23,8 @@ router.post("/signup", async (req, res) => {
 		res.cookie("refreshToken", await getRefreshToken(user._id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV === "production",
 		});
 		logger.info("User created successfully", {
 			userId: user._id,
@@ -69,6 +71,8 @@ router.post("/login", async (req, res) => {
 		res.cookie("refreshToken", await getRefreshToken(user._id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV === "production",
 		});
 		logger.info("Login successful", {
 			userId: user._id,
@@ -117,6 +121,8 @@ router.post("/refresh", async (req, res) => {
 		res.cookie("refreshToken", await getRefreshToken(payload.id), {
 			maxAge: 1000 * 60 * 60 * 24 * 7,
 			httpOnly: true,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV === "production",
 		});
 		logger.info("Tokens has been refreshed");
 		res.status(201).json({

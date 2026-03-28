@@ -1,24 +1,25 @@
 services:
   database:
     image: mongo:noble@sha256:e30bf5231ff01512e7db91feda37b7ef4fd499867b89a1e13bd6988a55745cf4
+    restart: unless-stopped
     expose:
       - 27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
-      - database-data:/data/db
+      - database-data:/data
     profiles: [prod, dev]
 
   redis:
     image: redis:8.2.4-alpine@sha256:71179d1836f5400125888fb073b8e1956458733db3b3a201b13f3bfb7730fb94
-    restart: always
+    restart: unless-stopped
     expose:
       - 6379
     profiles: [prod, dev]
 
   server:
-    image: ghcr.io/m-nadra/lista-zadan-mern-server:latest
+    image: ghcr.io/m-nadra/lista-zadan-mern-server:main
     expose:
       - 3000
     environment:
@@ -30,10 +31,15 @@ services:
     profiles: [prod]
 
   client:
-    image: ghcr.io/m-nadra/lista-zadan-mern-client:latest
+    image: ghcr.io/m-nadra/lista-zadan-mern-client:main
     ports:
       - "80:80"
+      - "443:443"
     profiles: [prod]
+    depends_on:
+      - server
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
   
   server-dev:
     build: ./server/
@@ -45,6 +51,7 @@ services:
       DATABASE_URL: "mongodb://${MONGO_USER}:${MONGO_PASSWORD}@database:27017/lista_zadan?authSource=admin"
       JWTPRIVATEKEY: ${JWTPRIVATEKEY}
       LOG_LEVEL: "debug"
+      NODE_ENV: dev
     develop:
       watch:
         - action: sync+restart

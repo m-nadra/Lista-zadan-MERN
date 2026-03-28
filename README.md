@@ -85,3 +85,5 @@ docker compose --profile dev up --watch
 ```
 
 ---
+
+### ❗ If you want to run app in production mode, create certs directory with your key.pem and cert.pem files!
