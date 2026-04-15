@@ -9,7 +9,7 @@ import auth from "./routes/auth.js";
 import tasks from "./routes/tasks.js";
 import redis from "./token.js";
 
-const port = process.env.PORT;
+const PORT = process.env.PORT;
 const app = express();
 
 app.use(morgan(":date - :method :url - :status"));
@@ -37,6 +37,16 @@ redis
 app.use("/api/tasks", tasks);
 app.use("/api", auth);
 
-app.listen(port, () => {
-	logger.info(`Server is running at port ${port}`);
+app.use((err, req, res, _) => {
+	logger.error("Unhandled error", {
+		ip: req.ip,
+		method: req.method,
+		path: req.path,
+		error: err.message
+	});
+	res.status(500).json({ error: "Internal server error" });
+});
+
+app.listen(PORT, () => {
+	logger.info(`Server is running at port ${PORT}`);
 });
