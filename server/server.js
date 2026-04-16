@@ -37,6 +37,10 @@ redis
 app.use("/api/tasks", tasks);
 app.use("/api", auth);
 
+app.get("/health", (_, res) => {
+	res.status(200).end();
+});
+
 app.use((err, req, res, _) => {
 	logger.error("Unhandled error", {
 		ip: req.ip,

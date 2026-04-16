@@ -1,34 +1,43 @@
-FROM node:lts-alpine@sha256:931d7d57f8c1fd0e2179dbff7cc7da4c9dd100998bc2b32afc85142d8efbc213 AS dev
+FROM node:lts-alpine3.23@sha256:ff2c02f071f9e56778013b47d70f7524f5d4eacb032027f0f434838d77cf25e0 AS base
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json .
 RUN npm ci
 COPY . .
-EXPOSE 5173
-CMD ["npm", "run", "dev" , "--", "--host"]
 
-FROM node:lts-alpine@sha256:931d7d57f8c1fd0e2179dbff7cc7da4c9dd100998bc2b32afc85142d8efbc213 AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
+FROM base AS builder
 RUN npm run build
 
-FROM nginx:stable-alpine@sha256:67cbbcc757a6ce913b33e515b020cfd3923897ad883c452903b1e3487a95a570
+######## DEVELOPMENT IMAGE ########
+
+FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS dev
+LABEL org.opencontainers.image.authors="Mikołaj Nadra <m.nadra@proton.me>"
+
+RUN apk add --update --no-cache npm curl && \
+addgroup -S node && adduser -S node -G node
+
+WORKDIR /app
+COPY --from=base --chown=node:node /app . 
+
+HEALTHCHECK --interval=10s --timeout=1s \
+    CMD curl -f http://localhost:5173/ || exit 1
+
+USER node
+EXPOSE 5173
+CMD ["npm", "run", "dev"]
+
+######## PRODUCTION IMAGE ########
+
+FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+LABEL org.opencontainers.image.authors="Mikołaj Nadra <m.nadra@proton.me>"
+
+RUN apk add --update --no-cache nginx curl
+
 COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx:nginx --from=builder /app/dist /usr/share/nginx/html
-RUN mkdir -p /var/cache/nginx/client_temp && \
-        mkdir -p /var/cache/nginx/proxy_temp && \
-        mkdir -p /var/cache/nginx/fastcgi_temp && \
-        mkdir -p /var/cache/nginx/uwsgi_temp && \
-        mkdir -p /var/cache/nginx/scgi_temp && \
-        chown -R nginx:nginx /var/cache/nginx && \
-        chown -R nginx:nginx /etc/nginx/ && \
-        chmod -R 755 /etc/nginx/ && \
-        chown -R nginx:nginx /var/log/nginx && \
-        mkdir /etc/nginx/certs && \
-        chmod +r /etc/nginx/certs
-RUN touch /var/run/nginx.pid && \
-        chown -R nginx:nginx /var/run/nginx.pid /run/nginx.pid
+
+HEALTHCHECK --interval=10s --timeout=1s \
+    CMD curl -f http://localhost:80/ || exit 1
+
 USER nginx
 EXPOSE 80
 EXPOSE 443

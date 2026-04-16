@@ -23,7 +23,6 @@ services:
     expose:
       - 3000
     environment:
-      PORT: 3000
       CLIENT_URL: "http://client:80"
       DATABASE_URL: "mongodb://${MONGO_USER}:${MONGO_PASSWORD}@database:27017/lista_zadan?authSource=admin"
       JWTPRIVATEKEY: ${JWTPRIVATEKEY}
@@ -42,16 +41,16 @@ services:
       - ./certs:/etc/nginx/certs:ro
   
   server-dev:
-    build: ./server/
+    build:
+      context: ./server
+      target: dev
     ports:
       - "3000:3000"
     environment:
-      PORT: 3000
       CLIENT_URL: "http://client-dev:5173"
       DATABASE_URL: "mongodb://${MONGO_USER}:${MONGO_PASSWORD}@database:27017/lista_zadan?authSource=admin"
       JWTPRIVATEKEY: ${JWTPRIVATEKEY}
       LOG_LEVEL: "debug"
-      NODE_ENV: dev
     develop:
       watch:
         - action: sync+restart
@@ -59,7 +58,6 @@ services:
           target: /app/
         - action: rebuild
           path: ./server/package.json
-    command: npm run dev -- --host
     profiles: [dev]
 
   client-dev:
