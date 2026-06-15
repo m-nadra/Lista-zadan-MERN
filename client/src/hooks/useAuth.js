@@ -25,20 +25,27 @@ export const useAuth = () => {
 	};
 	const handleLogin = async (username, password) => {
 		try {
-			const response = await api.post("api/login", {
-				username: username,
-				password: password
+			const response = await fetch("api/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					username: username,
+					password: password
+				})
 			});
 			if (response.ok) {
 				const data = await response.json();
 				setAccessToken(data.accessToken);
 				setStatus("authenticated");
+			} else if (response.status === 401) {
+				setErrorMessage("Nieprawidłowy login lub hasło");
+			} else {
+				throw new Error();
 			}
-			if (response.status === 401) setErrorMessage("Nieprawidłowe hasło");
-			else if (response.status === 404) setErrorMessage("Użytkownik nie istnieje");
-			else setErrorMessage("Wystąpił błąd po stronie serwera.");
-		} catch (err) {
-			setErrorMessage(err.message);
+		} catch {
+			setErrorMessage("Wystąpił błąd po stronie serwera.");
 		}
 	};
 	const handleLogout = async () => {

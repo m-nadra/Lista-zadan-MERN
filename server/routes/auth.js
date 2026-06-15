@@ -41,20 +41,25 @@ router.post("/login", async (req, res) => {
 	logger.info("Login attempt", { username: req.body.username });
 	const value = await userSchema.validateAsync(req.body);
 	const user = await User.findOne({ username: value.username });
+	let authError = false;
+
 	if (!user) {
 		logger.warn("Login failed - user not found", {
 			username: value.username
 		});
-		return res.status(404).json({ error: "User not found" });
-	}
-
-	if (!(await verify(user.password, value.password))) {
+		authError = true;
+	} else if (!(await verify(user.password, value.password))) {
 		logger.warn("Login failed - invalid password", {
 			userId: user._id,
 			username: user.username
 		});
-		return res.status(401).json({ error: "Invalid password" });
+		authError = true;
 	}
+
+	if (authError) {
+		return res.status(401).json({ error: "Invalid username or password" });
+	}
+
 	res.cookie("refreshToken", await getRefreshToken(user._id), {
 		maxAge: REFRESH_TOKEN_AGE,
 		httpOnly: true,
