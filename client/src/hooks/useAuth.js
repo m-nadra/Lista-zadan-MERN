@@ -40,12 +40,12 @@ export const useAuth = () => {
 				setAccessToken(data.accessToken);
 				setStatus("authenticated");
 			} else if (response.status === 401) {
-				setErrorMessage("Nieprawidłowy login lub hasło");
+				return "Nieprawidłowy login lub hasło";
 			} else {
 				throw new Error();
 			}
 		} catch {
-			setErrorMessage("Wystąpił błąd po stronie serwera.");
+			return "Wystąpił błąd po stronie serwera.";
 		}
 	};
 	const handleLogout = async () => {
