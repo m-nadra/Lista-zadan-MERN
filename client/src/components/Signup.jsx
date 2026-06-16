@@ -1,51 +1,48 @@
-import { useState } from "react";
+import { useActionState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import styles from "../styles/authPages.module.css";
+import PasswordInput from "./ui/PasswordInput";
 
 export default function Signup() {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [password2, setPassword2] = useState("");
-	const { handleSignup, errorMessage } = useAuth();
-	const handleSubmit = e => {
-		e.preventDefault();
-		handleSignup(username, password, password2);
-	};
+	const { handleSignup } = useAuth();
+	const [errors, formAction] = useActionState(async (_, formData) => {
+		const username = formData.get("username");
+		const password = formData.get("password");
+		const password2 = formData.get("password2");
+		const formErrors = {};
+
+		if (!username) formErrors.username = "Podaj nazwę użytkownika";
+		if (!password) formErrors.password = "Podaj hasło";
+		if (!password2) formErrors.password2 = "Podaj hasło";
+		if (password !== password2) formErrors.password2 = "Hasła nie są takie same";
+
+		if (Object.keys(formErrors).length === 0)
+			formErrors.serverResponse = await handleSignup(username, password);
+		return formErrors;
+	}, {});
+
 	return (
 		<main className={styles.main}>
-			<form onSubmit={handleSubmit} className={styles.form}>
+			<form action={formAction} className={styles.form}>
 				<h1>Zarejestruj się</h1>
-				<p className={styles.p}>{errorMessage}</p>
+				{errors.serverResponse && <p className={styles.p}>{errors.serverResponse}</p>}
+
 				<label htmlFor="username">Nazwa użytkownika</label>
-				<input
-					type="text"
-					id="username"
-					value={username}
-					onChange={e => setUsername(e.target.value)}
-					required
-				/>
-				<label htmlFor="password">Hasło</label>
-				<input
-					type="password"
-					id="password"
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-					required
-				/>
-				<label htmlFor="password">Powtórz hasło</label>
-				<input
-					type="password"
-					id="password2"
-					value={password2}
-					onChange={e => setPassword2(e.target.value)}
-					required
-				/>
+				<input type="text" id="username" name="username" />
+				{errors.username && <p className={styles.p}>{errors.username}</p>}
+
+				<PasswordInput name="password" />
+				{errors.password && <p className={styles.p}>{errors.password}</p>}
+
+				<PasswordInput name="password2" />
+				{errors.password2 && <p className={styles.p}>{errors.password2}</p>}
+
 				<input type="submit" value="Załóż konto" />
-				<Link className={styles.link} to="/login">
-					Posiadasz konto? Zaloguj się
-				</Link>
 			</form>
+			<Link className={styles.link} to="/login">
+				Posiadasz konto? Zaloguj się
+			</Link>
 		</main>
 	);
 }

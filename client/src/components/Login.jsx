@@ -29,7 +29,7 @@ export default function Login() {
 				<input type="text" id="login" name="login" />
 				{errors.login && <p className={styles.p}>{errors.login}</p>}
 
-				<PasswordInput />
+				<PasswordInput name="password" />
 				{errors.password && <p className={styles.p}>{errors.password}</p>}
 
 				<input type="submit" value="Zaloguj się" />

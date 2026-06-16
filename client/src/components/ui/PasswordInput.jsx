@@ -10,14 +10,14 @@ const toggleButtonStyle = {
 	cursor: "pointer"
 };
 
-export default function PasswordInput() {
+export default function PasswordInput({ name }) {
 	const [showPassword, setShowPassword] = useState(false);
 
 	return (
 		<>
-			<label htmlFor="password">Hasło</label>
+			<label htmlFor={name}>Hasło</label>
 			<div style={inputWrapperStyle}>
-				<input type={showPassword ? "text" : "password"} id="password" name="password" />
+				<input type={showPassword ? "text" : "password"} id={name} name={name} />
 				<button
 					type="button"
 					style={toggleButtonStyle}
