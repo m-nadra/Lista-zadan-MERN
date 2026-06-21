@@ -1,7 +1,7 @@
 import { useActionState } from "react";
 import { Link } from "react-router";
-import { useAuth } from "../hooks/useAuth";
-import styles from "../styles/authPages.module.css";
+import { useAuth } from "@/hooks/useAuth";
+import styles from "@/styles/authPages.module.css";
 import PasswordInput from "./ui/PasswordInput";
 
 export default function Signup() {
@@ -24,12 +24,12 @@ export default function Signup() {
 
 	return (
 		<main className={styles.main}>
-			<form action={formAction} className={styles.form}>
-				<h1>Zarejestruj się</h1>
-				{errors.serverResponse && <p className={styles.p}>{errors.serverResponse}</p>}
+			<h1>Zarejestruj się</h1>
+			{errors.serverResponse && <p className={styles.p}>{errors.serverResponse}</p>}
 
+			<form action={formAction} className={styles.form}>
 				<label htmlFor="username">Nazwa użytkownika</label>
-				<input type="text" id="username" name="username" />
+				<input type="text" id="username" name="username" placeholder=" " />
 				{errors.username && <p className={styles.p}>{errors.username}</p>}
 
 				<PasswordInput name="password" />
@@ -40,6 +40,7 @@ export default function Signup() {
 
 				<input type="submit" value="Załóż konto" />
 			</form>
+
 			<Link className={styles.link} to="/login">
 				Posiadasz konto? Zaloguj się
 			</Link>
