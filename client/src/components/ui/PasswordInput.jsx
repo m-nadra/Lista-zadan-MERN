@@ -24,7 +24,8 @@ const eyeButtonStyle = {
 	padding: 0,
 	display: "flex",
 	alignItems: "center",
-	justifyContent: "center"
+	justifyContent: "center",
+	color: "var(--text)"
 };
 
 export default function PasswordInput({ name }) {
@@ -51,10 +52,10 @@ export default function PasswordInput({ name }) {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-eye-off-icon lucide-eye-off"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							className="lucide lucide-eye-off-icon lucide-eye-off"
 						>
 							<title>Show password button</title>
 							<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
@@ -70,10 +71,10 @@ export default function PasswordInput({ name }) {
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-eye-icon lucide-eye"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							className="lucide lucide-eye-icon lucide-eye"
 						>
 							<title>Hide password button</title>
 							<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
