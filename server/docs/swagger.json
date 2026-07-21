@@ -42,6 +42,14 @@
 										"message": {
 											"type": "string",
 											"example": "User created successfully"
+										},
+										"accessToken": {
+											"type": "string",
+											"example": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3M2YyYzQwZjEwYjA5MDAxNTBjM2QwNSJ9.abc123"
+										},
+										"type": {
+											"type": "string",
+											"example": "Bearer"
 										}
 									}
 								}
@@ -99,19 +107,24 @@
 					}
 				},
 				"responses": {
-					"204": {
-						"description": "Login successful"
-					},
-					"404": {
-						"description": "User not found",
+					"200": {
+						"description": "Login successful",
 						"content": {
 							"application/json": {
 								"schema": {
 									"type": "object",
 									"properties": {
-										"error": {
+										"message": {
 											"type": "string",
-											"example": "User not found"
+											"example": "Login successful"
+										},
+										"accessToken": {
+											"type": "string",
+											"example": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3M2YyYzQwZjEwYjA5MDAxNTBjM2QwNSJ9.abc123"
+										},
+										"type": {
+											"type": "string",
+											"example": "Bearer"
 										}
 									}
 								}
@@ -119,7 +132,7 @@
 						}
 					},
 					"401": {
-						"description": "Invalid password",
+						"description": "Invalid username or password",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -127,7 +140,7 @@
 									"properties": {
 										"error": {
 											"type": "string",
-											"example": "Invalid password"
+											"example": "Invalid username or password"
 										}
 									}
 								}
@@ -150,6 +163,54 @@
 				"responses": {
 					"204": {
 						"description": "Logout successful"
+					}
+				}
+			}
+		},
+		"/api/refresh": {
+			"post": {
+				"summary": "Refresh access token",
+				"tags": ["Authentication"],
+				"responses": {
+					"201": {
+						"description": "Access token refreshed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Access token created"
+										},
+										"accessToken": {
+											"type": "string",
+											"example": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3M2YyYzQwZjEwYjA5MDAxNTBjM2QwNSJ9.abc123"
+										},
+										"type": {
+											"type": "string",
+											"example": "Bearer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized - no or invalid token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "string",
+											"example": "Unauthorized - no token"
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
